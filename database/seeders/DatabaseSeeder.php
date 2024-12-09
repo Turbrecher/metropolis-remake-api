@@ -29,11 +29,11 @@ class DatabaseSeeder extends Seeder
 
         $user = new User();
         $user->assignRole('admin');
-        $user->email = 'victor@correo.es';
-        $user->name = 'Victor';
-        $user->surname = 'Vera';
-        $user->username = 'vittorio';
-        $user->password = Hash('sha256', '12345678');
+        $user->email = 'VICTOR@CORREO.ES';
+        $user->name = 'VICTOR';
+        $user->surname = 'VERA';
+        $user->username = 'VITTORIO';
+        $user->password = Hash::make('12345678');
 
         $user->save();
 
