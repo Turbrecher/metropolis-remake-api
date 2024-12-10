@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Ticket as TicketModel;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use TypeError;
 
 class Ticket extends Controller
@@ -112,6 +113,59 @@ class Ticket extends Controller
                     "ticket" => $ticket
                 ],
                 200
+            );
+        } catch (Exception $exception) {
+
+            return response()->json(
+                $exception,
+                400
+            );
+        }
+    }
+
+
+
+    //[PUT]
+    //Edits an existing ticket
+    public function edit(Request $request, string $id)
+    {
+
+
+        try {
+            $validated = $request->validate([
+                "movie_session_id" => ["required"],
+                "seat_id" => ["required"],
+                "user_id" => ["required"],
+                "date" => ["required"],
+
+            ]);
+
+            $ticket = TicketModel::find($id);
+            $ticket->movie_session_id = $request->input('movie_session_id');
+            $ticket->seat_id = $request->input('seat_id');
+            $ticket->user_id = $request->input('user_id');
+            $ticket->date = $request->input('date');
+
+
+            $ticket->save();
+
+            return response()->json(
+                [
+                    "message" => "The ticket has been edited",
+                    "ticket" => $ticket
+                ],
+                200
+            );
+        } catch (TypeError $typeError) {
+            return response()->json(
+                "You have to filter by id, which has to be a number",
+                400
+            );
+        } catch (ValidationException $exception) {
+
+            return response()->json(
+                "Fields received are invalid. (Remember that you have to use a post request with an attribute _method=PUT, otherwise, request will be empty)",
+                422
             );
         } catch (Exception $exception) {
 

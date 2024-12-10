@@ -16,7 +16,7 @@ class Seat extends Controller
         try {
             $seats = SeatModel::all();
 
-            foreach($seats as $seat){
+            foreach ($seats as $seat) {
                 $seat->room;
             }
 
@@ -46,22 +46,12 @@ class Seat extends Controller
     {
         try {
 
-            if (!is_numeric($id)) {
-                throw new TypeError();
-            }
-
             $seat = SeatModel::find($id);
             $seat->room;
 
             return response()->json(
                 $seat,
                 200
-            );
-        } catch (TypeError $typeError) {
-
-            return response()->json(
-                "You have to filter by id, which has to be a number",
-                400
             );
         } catch (Exception $exception) {
 
@@ -73,7 +63,7 @@ class Seat extends Controller
     }
 
 
-     //[POST]
+    //[POST]
     //Creates a new seat
     public function create(Request $request)
     {
@@ -113,4 +103,43 @@ class Seat extends Controller
     }
 
 
+
+    //[PUT]
+    //Edits an existing seat
+    public function edit(Request $request, string $id)
+    {
+
+
+        try {
+            $validated = $request->validate([
+                "type" => ["required"],
+                "row" => ["required"],
+                "col" => ["required"],
+                "room_id" => ["required"],
+
+            ]);
+
+            $seat = SeatModel::find($id);
+            $seat->type = $request->input('type');
+            $seat->row = $request->input('row');
+            $seat->col = $request->input('col');
+            $seat->room_id = $request->input('room_id');
+
+            $seat->save();
+
+            return response()->json(
+                [
+                    "message" => "The seat has been edited",
+                    "seat" => $seat
+                ],
+                200
+            );
+        } catch (Exception $exception) {
+
+            return response()->json(
+                $exception,
+                400
+            );
+        }
+    }
 }

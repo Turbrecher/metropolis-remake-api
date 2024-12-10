@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Room as RoomModel;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 use TypeError;
 
@@ -102,6 +103,61 @@ class Room extends Controller
 
             return response()->json(
                 "An unexpected error ocurred",
+                400
+            );
+        }
+    }
+
+
+
+
+    //[PUT]
+    //Edits an existing room
+    public function edit(Request $request, string $id)
+    {
+
+        if (!is_numeric($id)) {
+            throw new TypeError();
+        }
+
+
+        try {
+            $validated = $request->validate([
+                "name" => ["required"],
+                "rows" => ["required"],
+                "cols" => ["required"],
+
+            ]);
+
+            $room = RoomModel::find($id);
+            $room->name = $request->input('name');
+            $room->rows = $request->input('rows');
+            $room->cols = $request->input('cols');
+
+            $room->save();
+
+            return response()->json(
+                [
+                    "message" => "The room has been edited",
+                    "room" => $room
+                ],
+                200
+            );
+        } catch (TypeError $typeError) {
+            return response()->json(
+                "You have to filter by id, which has to be a number",
+                400
+            );
+        } catch (ValidationException $exception) {
+
+            return response()->json(
+                "Fields received are invalid. (Remember that you have to use a post request with an attribute _method=PUT, otherwise, request will be empty)",
+                422
+            );
+        } catch (Exception $exception) {
+
+            return response()->json(
+                $exception,
                 400
             );
         }
