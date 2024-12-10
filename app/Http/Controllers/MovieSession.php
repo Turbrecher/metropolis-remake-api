@@ -16,6 +16,11 @@ class MovieSession extends Controller
         try {
             $movieSessions = MovieSessionModel::all();
 
+            foreach ($movieSessions as $movieSession) {
+                $movieSession->room;
+                $movieSession->movie;
+            }
+
             return response()->json(
                 $movieSessions,
                 200
@@ -29,7 +34,7 @@ class MovieSession extends Controller
         } catch (Exception $exception) {
 
             return response()->json(
-                "An unexpected error ocurred",
+                $exception,
                 400
             );
         }
@@ -48,6 +53,8 @@ class MovieSession extends Controller
 
 
             $movieSession = MovieSessionModel::find($id);
+            $movieSession->room;
+            $movieSession->movie;
 
             return response()->json(
                 $movieSession,
@@ -62,7 +69,46 @@ class MovieSession extends Controller
         } catch (Exception $exception) {
 
             return response()->json(
-                "An unexpected error ocurred",
+
+                $exception,
+                400
+            );
+        }
+    }
+
+
+    //[POST]
+    //Creates a new movie session
+    public function create(Request $request)
+    {
+
+
+        try {
+            $validated = $request->validate([
+                "time" => ["required"],
+                "room_id" => ["required"],
+                "movie_id" => ["required"],
+
+            ]);
+
+            $movieSession = new MovieSessionModel();
+            $movieSession->time = $request->input('time');
+            $movieSession->room_id = $request->input('room_id');
+            $movieSession->movie_id = $request->input('movie_id');
+
+            $movieSession->save();
+
+            return response()->json(
+                [
+                    "message" => "A movie session has been created",
+                    "movie session" => $movieSession
+                ],
+                200
+            );
+        } catch (Exception $exception) {
+
+            return response()->json(
+                $exception,
                 400
             );
         }

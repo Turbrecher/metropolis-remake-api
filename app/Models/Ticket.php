@@ -13,8 +13,9 @@ class Ticket extends Model
 
     protected $fillable = [
         "movie_session_id" => "integer",
-        "user" => "integer",
+        "user_id" => "integer",
         "date" => "string",
+        "seat_id" => "integer",
 
     ];
 
@@ -24,8 +25,12 @@ class Ticket extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function session()
+    public function movieSession()
     {
         return $this->belongsTo(MovieSession::class);
+    }
+
+    public function seat(){
+        return $this->belongsTo(Seat::class);
     }
 }

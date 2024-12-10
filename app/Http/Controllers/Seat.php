@@ -16,6 +16,10 @@ class Seat extends Controller
         try {
             $seats = SeatModel::all();
 
+            foreach($seats as $seat){
+                $seat->room;
+            }
+
             return response()->json(
                 $seats,
                 200
@@ -47,6 +51,7 @@ class Seat extends Controller
             }
 
             $seat = SeatModel::find($id);
+            $seat->room;
 
             return response()->json(
                 $seat,
@@ -66,4 +71,46 @@ class Seat extends Controller
             );
         }
     }
+
+
+     //[POST]
+    //Creates a new seat
+    public function create(Request $request)
+    {
+
+
+        try {
+            $validated = $request->validate([
+                "type" => ["required"],
+                "row" => ["required"],
+                "col" => ["required"],
+                "room_id" => ["required"],
+
+            ]);
+
+            $seat = new SeatModel();
+            $seat->type = $request->input('type');
+            $seat->row = $request->input('row');
+            $seat->col = $request->input('col');
+            $seat->room_id = $request->input('room_id');
+
+            $seat->save();
+
+            return response()->json(
+                [
+                    "message" => "A seat has been created",
+                    "seat" => $seat
+                ],
+                200
+            );
+        } catch (Exception $exception) {
+
+            return response()->json(
+                $exception,
+                400
+            );
+        }
+    }
+
+
 }

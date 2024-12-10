@@ -12,7 +12,7 @@ class MovieSession extends Model
 
 
     protected $fillable = [
-        "movie" => "integer",
+        "movie_id" => "integer",
         "time" => "string",
         'room_id' => "integer"
     ];
@@ -21,6 +21,11 @@ class MovieSession extends Model
     public function movie()
     {
         return $this->belongsTo(Movie::class);
+    }
+
+    public function room()
+    {
+        return $this->belongsTo(Room::class);
     }
 
     public function tickets()

@@ -16,6 +16,15 @@ class Ticket extends Controller
         try {
             $tickets = TicketModel::all();
 
+
+            foreach ($tickets as $ticket) {
+                $ticket->movieSession;
+                $ticket->user;
+                $ticket->seat;
+                $ticket->seat->room;
+                $ticket->movieSession->movie;
+            }
+
             return response()->json(
                 $tickets,
                 200
@@ -47,6 +56,11 @@ class Ticket extends Controller
             }
 
             $ticket = TicketModel::find($id);
+            $ticket->movieSession;
+            $ticket->user;
+            $ticket->seat;
+            $ticket->seat->room;
+            $ticket->movieSession->movie;
 
             return response()->json(
                 $ticket,
@@ -61,7 +75,48 @@ class Ticket extends Controller
         } catch (Exception $exception) {
 
             return response()->json(
-                "An unexpected error ocurred",
+                $exception,
+                400
+            );
+        }
+    }
+
+
+    //[POST]
+    //Creates a new ticket
+    public function create(Request $request)
+    {
+
+
+        try {
+            $validated = $request->validate([
+                "movie_session_id" => ["required"],
+                "seat_id" => ["required"],
+                "user_id" => ["required"],
+                "date" => ["required"],
+
+            ]);
+
+            $ticket = new TicketModel();
+            $ticket->movie_session_id = $request->input('movie_session_id');
+            $ticket->seat_id = $request->input('seat_id');
+            $ticket->user_id = $request->input('user_id');
+            $ticket->date = $request->input('date');
+
+
+            $ticket->save();
+
+            return response()->json(
+                [
+                    "message" => "A ticket has been created",
+                    "ticket" => $ticket
+                ],
+                200
+            );
+        } catch (Exception $exception) {
+
+            return response()->json(
+                $exception,
                 400
             );
         }
