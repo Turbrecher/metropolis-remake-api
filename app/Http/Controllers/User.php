@@ -6,6 +6,7 @@ use App\Models\User as UserModel;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use TypeError;
 
 class User extends Controller
@@ -38,7 +39,7 @@ class User extends Controller
         } catch (Exception $exception) {
 
             return response()->json(
-                $exception,
+                $exception->getMessage(),
                 400
             );
         }
@@ -67,7 +68,7 @@ class User extends Controller
         } catch (Exception $exception) {
 
             return response()->json(
-                $exception,
+                $exception->getMessage(),
                 400
             );
         }
@@ -110,7 +111,7 @@ class User extends Controller
         } catch (Exception $exception) {
 
             return response()->json(
-                $exception,
+                $exception->getMessage(),
                 400
             );
         }
@@ -135,6 +136,18 @@ class User extends Controller
                 $user->password = Hash::make($request['password']);
             }
 
+            if ($request->input('name')) {
+                $user->name = $request->input('name');
+            }
+
+            if ($request->input('surname')) {
+                $user->surname = $request->input('surname');
+            }
+
+            if ($request->input('username')) {
+                $user->username = $request->input('username');
+            }
+
 
             if ($request->input('role') != 'admin') {
                 $user->assignRole("user");
@@ -155,6 +168,43 @@ class User extends Controller
 
             return response()->json(
                 $exception,
+                400
+            );
+        }
+    }
+
+
+
+    //[DELETE]
+    //Deletes an existing user
+    public function delete(Request $request, string $id)
+    {
+        try {
+            $user = UserModel::find($id);
+
+            if ($user == null) {
+                throw new NotFoundHttpException("The user you're trying to delete doesn't exist");
+            }
+
+            $user->delete();
+
+            return response()->json(
+                [
+                    "user" => $user,
+                    "message" => "User succesfully deleted"
+                ],
+                200
+            );
+        } catch (NotFoundHttpException $exception) {
+
+            return response()->json(
+                $exception->getMessage(),
+                400
+            );
+        } catch (Exception $exception) {
+
+            return response()->json(
+                $exception->getMessage(),
                 400
             );
         }

@@ -6,6 +6,7 @@ use App\Models\Room as RoomModel;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 use TypeError;
 
@@ -162,4 +163,45 @@ class Room extends Controller
             );
         }
     }
+
+
+    //[DELETE]
+    //Deletes an existing room.
+    public function delete(Request $request, string $id)
+    {
+
+        try {
+
+            $room = RoomModel::find($id);
+
+            if ($room == null) {
+                throw new NotFoundHttpException("The room you're trying to delete doesn't exist");
+            }
+
+            $room->delete();
+
+
+
+            return response()->json(
+                [
+                    "room" => $room,
+                    "message" => "room succesfully deleted"
+                ],
+                200
+            );
+        } catch (NotFoundHttpException $exception) {
+            return response()->json(
+                $exception->getMessage(),
+                404
+            );
+        } catch (Exception $exception) {
+            return response()->json(
+                $exception->getMessage(),
+                400
+            );
+        }
+    }
+
+
+
 }

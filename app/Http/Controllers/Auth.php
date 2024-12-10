@@ -107,4 +107,52 @@ class Auth extends Controller
             ["role" => "user"]
         );
     }
+
+
+
+    //[PUT]
+    //Edits your profile
+    public function editProfile(Request $request)
+    {
+        try {
+
+            $user = UserModel::find($request->user()->id);
+            
+            if ($request['email']) {
+                $user->email = strtoupper($request['email']);
+            }
+
+            if ($request['password']) {
+                $user->password = Hash::make($request['password']);
+            }
+
+            if ($request->input('name')) {
+                $user->name = strtoupper($request->input('name'));
+            }
+
+            if ($request->input('surname')) {
+                $user->surname = strtoupper($request->input('surname'));
+            }
+
+            if ($request->input('username')) {
+                $user->username = strtoupper($request->input('username'));
+            }
+
+            $user->save();
+
+            return response()->json(
+                [
+                    "user" => $user,
+                    "message" => "Profile succesfully edited"
+                ],
+                200
+            );
+        } catch (Exception $exception) {
+
+            return response()->json(
+                $exception,
+                400
+            );
+        }
+    }
 }

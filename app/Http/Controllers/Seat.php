@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Seat as SeatModel;
 use Exception;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use TypeError;
 
 class Seat extends Controller
@@ -142,4 +143,45 @@ class Seat extends Controller
             );
         }
     }
+
+
+
+    //[DELETE]
+    //Deletes an existing seat.
+    public function delete(Request $request, string $id)
+    {
+
+        try {
+
+            $seat = SeatModel::find($id);
+
+            if ($seat == null) {
+                throw new NotFoundHttpException("The seat you're trying to delete doesn't exist");
+            }
+
+            $seat->delete();
+
+
+
+            return response()->json(
+                [
+                    "seat" => $seat,
+                    "message" => "seat succesfully deleted"
+                ],
+                200
+            );
+        } catch (NotFoundHttpException $exception) {
+            return response()->json(
+                $exception->getMessage(),
+                404
+            );
+        } catch (Exception $exception) {
+            return response()->json(
+                $exception->getMessage(),
+                400
+            );
+        }
+    }
+
+
 }

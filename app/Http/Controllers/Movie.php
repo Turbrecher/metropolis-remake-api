@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use TypeError;
 
 class Movie extends Controller
@@ -67,7 +68,7 @@ class Movie extends Controller
                 $movie,
                 200
             );
-        }  catch (Exception $exception) {
+        } catch (Exception $exception) {
             return response()->json(
                 $exception,
                 400
@@ -191,6 +192,43 @@ class Movie extends Controller
 
             return response()->json(
                 $exception,
+                400
+            );
+        }
+    }
+
+    //[DELETE]
+    //Deletes an existing movie.
+    public function delete(Request $request, string $id)
+    {
+
+        try {
+
+            $movie = MovieModel::find($id);
+
+            if ($movie == null) {
+                throw new NotFoundHttpException("The movie you're trying to delete doesn't exist");
+            }
+
+            $movie->delete();
+
+
+
+            return response()->json(
+                [
+                    "movie" => $movie,
+                    "message" => "Movie succesfully deleted"
+                ],
+                200
+            );
+        } catch (NotFoundHttpException $exception) {
+            return response()->json(
+                $exception->getMessage(),
+                404
+            );
+        } catch (Exception $exception) {
+            return response()->json(
+                $exception->getMessage(),
                 400
             );
         }

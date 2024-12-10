@@ -55,7 +55,7 @@ class MovieFactory extends Factory
             "releaseDate" => fake()->date('Y.m.d'),
             "genres" => $genres[rand(0, count($genres) - 1)],
             "pegi" => $pegi[rand(0, count($pegi) - 1)],
-            "portrait" => 'default.png'
+            "portrait" => 'default.jpg'
         ];
     }
 }

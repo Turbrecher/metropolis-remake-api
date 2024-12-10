@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use TypeError;
 
 use function Pest\Laravel\json;
@@ -183,4 +184,44 @@ class Product extends Controller
             );
         }
     }
+
+    //[DELETE]
+    //Deletes an existing product.
+    public function delete(Request $request, string $id)
+    {
+
+        try {
+
+            $product = ProductModel::find($id);
+
+            if ($product == null) {
+                throw new NotFoundHttpException("The product you're trying to delete doesn't exist");
+            }
+
+            $product->delete();
+
+
+
+            return response()->json(
+                [
+                    "product" => $product,
+                    "message" => "product succesfully deleted"
+                ],
+                200
+            );
+        } catch (NotFoundHttpException $exception) {
+            return response()->json(
+                $exception->getMessage(),
+                404
+            );
+        } catch (Exception $exception) {
+            return response()->json(
+                $exception->getMessage(),
+                400
+            );
+        }
+    }
+
+
+
 }
