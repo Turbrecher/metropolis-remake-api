@@ -20,7 +20,8 @@ class Movie extends Model
         "releaseDate" => "string",
         "genres" => "string",
         "pegi" => "string",
-        "portrait" => "string"
+        "portrait" => "string",
+        "trailer" => "string"
     ];
 
     public function movieSessions()

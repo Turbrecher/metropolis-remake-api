@@ -14,6 +14,8 @@ class Auth extends Controller
     {
         try {
 
+
+
             $validated = $request->validate([
                 "password" => ["required", "regex:/^[A-Za-z0-9?¿_-]{5,50}|^$/"],
                 "email" => ["required"],
@@ -37,7 +39,7 @@ class Auth extends Controller
         } catch (Exception $e) {
             return response()->json([
                 'error' => $e
-            ]);
+            ], 400);
         }
     }
 
@@ -84,12 +86,16 @@ class Auth extends Controller
     {
 
         $user = $request->user();
+        $user->tickets;
+        foreach ($user->tickets as $ticket) {
+            $ticket->movieSession;
+            $ticket->movieSession->movie;
+            $ticket->seat;
+        }
 
         return response()->json(
-            [
-                'status' => 'success',
-                'user' => $user
-            ]
+            $user,
+            200
         );
     }
 
@@ -116,8 +122,9 @@ class Auth extends Controller
     {
         try {
 
+
             $user = UserModel::find($request->user()->id);
-            
+
             if ($request['email']) {
                 $user->email = strtoupper($request['email']);
             }

@@ -41,7 +41,7 @@ class DatabaseSeeder extends Seeder
         Movie::factory(10)->create();
         Room::factory(1)->create();
         Seat::factory(81)->create();
-        MovieSession::factory(10)->create();
+        MovieSession::factory(100)->create();
         Ticket::factory(10)->create();
         Product::factory(10)->create();
     }

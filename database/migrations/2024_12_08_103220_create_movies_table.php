@@ -22,6 +22,7 @@ return new class extends Migration
             $table->longText('genres');
             $table->string('pegi');
             $table->string('portrait');
+            $table->string('trailer');
             $table->timestamps();
         });
     }

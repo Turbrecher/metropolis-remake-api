@@ -94,6 +94,7 @@ class Movie extends Controller
                 "genres" => ["required"],
                 "pegi" => ["required"],
                 "portrait" => ["required"],
+                "trailer" => ["required"],
 
             ]);
 
@@ -106,6 +107,7 @@ class Movie extends Controller
             $movie->releaseDate = $request->input('releaseDate');
             $movie->genres = $request->input('genres');
             $movie->pegi = $request->input('pegi');
+            $movie->trailer = $request->input('trailer');
 
 
             if ($request->file('portrait')) {
@@ -152,6 +154,7 @@ class Movie extends Controller
                 "releaseDate" => ["required"],
                 "genres" => ["required"],
                 "pegi" => ["required"],
+                "trailer" => ["required"],
 
             ]);
 
@@ -164,6 +167,7 @@ class Movie extends Controller
             $movie->releaseDate = $request->input('releaseDate');
             $movie->genres = $request->input('genres');
             $movie->pegi = $request->input('pegi');
+            $movie->trailer = $request->input('trailer');
 
 
             if ($request->file('portrait')) {
