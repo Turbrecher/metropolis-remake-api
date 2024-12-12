@@ -50,9 +50,9 @@ Route::put('/seats/{id}', [Seat::class, 'edit'])->name('editSeat')->middleware('
 Route::delete('/seats/{id}', [Seat::class, 'delete'])->name('deleteSeat')->middleware('auth:sanctum')->middleware(RequireAdmin::class)->middleware(ParamIsNumeric::class);
 
 //Tickets.
-Route::get('/tickets', [Ticket::class, 'retrieveAll'])->name('retrieveAllTickets');
+Route::get('/tickets', [Ticket::class, 'retrieveAll'])->name('retrieveAllTickets')->middleware('auth:sanctum')->middleware(RequireAdmin::class);
 Route::post('/tickets', [Ticket::class, 'create'])->name('createTicket')->middleware('auth:sanctum')->middleware(RequireAdmin::class);
-Route::get('/tickets/{id}', [Ticket::class, 'retrieve'])->name('retrieveTicket')->middleware(ParamIsNumeric::class);
+Route::get('/tickets/{id}', [Ticket::class, 'retrieve'])->name('retrieveTicket')->middleware('auth:sanctum')->middleware(ParamIsNumeric::class);
 Route::put('/tickets/{id}', [Ticket::class, 'edit'])->name('editTicket')->middleware('auth:sanctum')->middleware(RequireAdmin::class)->middleware(ParamIsNumeric::class);
 Route::delete('/tickets/{id}', [Ticket::class, 'delete'])->name('deleteTicket')->middleware('auth:sanctum')->middleware(RequireAdmin::class)->middleware(ParamIsNumeric::class);
 

@@ -16,7 +16,7 @@ class MovieSession extends Controller
     public function retrieveAll(Request $request)
     {
         try {
-            $movieSessions = MovieSessionModel::all();
+            $movieSessions = MovieSessionModel::orderBy('movie_id', 'desc')->get();
 
             foreach ($movieSessions as $movieSession) {
                 $movieSession->room;
@@ -203,6 +203,4 @@ class MovieSession extends Controller
             );
         }
     }
-
-
 }
