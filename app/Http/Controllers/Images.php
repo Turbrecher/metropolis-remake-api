@@ -13,10 +13,8 @@ class Images extends Controller
     {
 
         try {
-            
-            return response()->file(public_path().'/storage/movies/'.$portraitName);
 
-
+            return response()->file(public_path() . '/storage/movies/' . $portraitName);
         } catch (Exception $exception) {
             return response()->json([
                 $exception->getMessage()
@@ -29,10 +27,21 @@ class Images extends Controller
     {
 
         try {
-            
-            return response()->file(public_path().'/storage/products/'.$productImageName);
 
+            return response()->file(public_path() . '/storage/products/' . $productImageName);
+        } catch (Exception $exception) {
+            return response()->json([
+                $exception->getMessage()
+            ], 400);
+        }
+    }
 
+    public function retrieveUserImage(Request $request, string $userImageName)
+    {
+
+        try {
+
+            return response()->file(public_path() . '/storage/users/' . $userImageName);
         } catch (Exception $exception) {
             return response()->json([
                 $exception->getMessage()

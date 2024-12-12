@@ -34,6 +34,7 @@ class DatabaseSeeder extends Seeder
         $user->surname = 'VERA';
         $user->username = 'VITTORIO';
         $user->password = Hash::make('12345678');
+        $user->photo = "default.png";
 
         $user->save();
 

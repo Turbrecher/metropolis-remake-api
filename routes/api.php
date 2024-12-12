@@ -75,3 +75,4 @@ Route::delete('/users/{id}', [User::class, 'delete'])->name('deleteUser')->middl
 //Images
 Route::get("/portraits/{portraitName}", [Images::class, 'retrievePortrait'])->name('retrievePortrait');
 Route::get("/productimages/{productImageName}", [Images::class, 'retrieveProductImage'])->name('retrieveProductImage');
+Route::get("/userimages/{userImageName}", [Images::class, 'retrieveUserImage'])->name('retrieveUserImage');
