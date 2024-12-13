@@ -23,6 +23,7 @@ class User extends Controller
             }
 
             $user = UserModel::find($id);
+            $user->roles[0];
 
 
 
@@ -98,6 +99,20 @@ class User extends Controller
             } else {
                 $user->assignRole("admin");
             }
+
+            if($request->input('name')){
+                $user->name = $request->input('name');
+            }
+
+            if($request->input('surname')){
+                $user->name = $request->input('surname');
+            }
+
+            if($request->input('username')){
+                $user->name = $request->input('username');
+            }
+
+            $user->photo = 'default.png';
 
             $user->save();
 
