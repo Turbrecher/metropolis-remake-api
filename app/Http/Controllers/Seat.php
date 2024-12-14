@@ -17,6 +17,10 @@ class Seat extends Controller
         try {
             $seats = SeatModel::all();
 
+            if($request->input('room')){
+                $seats = SeatModel::where('room_id', $request->input('room'))->get();
+            }
+
             foreach ($seats as $seat) {
                 $seat->room;
             }

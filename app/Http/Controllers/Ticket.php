@@ -62,6 +62,7 @@ class Ticket extends Controller
             $ticket->user;
             $ticket->seat;
             $ticket->seat->room;
+            $ticket->movieSession->room;
             $ticket->movieSession->movie;
 
             return response()->json(
@@ -133,6 +134,8 @@ class Ticket extends Controller
 
 
         try {
+
+
             $validated = $request->validate([
                 "movie_session_id" => ["required"],
                 "seat_id" => ["required"],

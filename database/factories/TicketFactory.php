@@ -17,9 +17,9 @@ class TicketFactory extends Factory
     public function definition(): array
     {
         return [
-            'movie_session_id' => rand(1, 10),
+            'movie_session_id' => rand(1, 9),
             'user_id' => 1,
-            'date' => fake()->date('Y.m.d'),
+            'date' => fake()->date('Y-m-d'),
             'seat_id'=>rand(1,81)
         ];
     }
