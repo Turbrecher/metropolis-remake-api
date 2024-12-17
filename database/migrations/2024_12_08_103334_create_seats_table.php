@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('type');
             $table->unsignedBigInteger('room_id');
             $table->foreign('room_id')->references('id')->on('rooms')->cascadeOnDelete();
+            $table->unique(['row', 'col', 'room_id']);
             $table->timestamps();
         });
     }

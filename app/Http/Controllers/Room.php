@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Room as RoomModel;
+use App\Models\Seat as SeatModel;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
@@ -50,6 +52,7 @@ class Room extends Controller
             }
 
             $room = RoomModel::find($id);
+            $room->seats;
 
             return response()->json(
                 $room,
@@ -79,6 +82,9 @@ class Room extends Controller
 
 
         try {
+            //return response()->json($request->all());
+
+
             $validated = $request->validate([
                 "name" => ["required"],
                 "rows" => ["required"],
@@ -86,12 +92,33 @@ class Room extends Controller
 
             ]);
 
+
+            //We begin a transaction
+            DB::beginTransaction();
+
             $room = new RoomModel();
             $room->name = $request->input('name');
             $room->rows = $request->input('rows');
             $room->cols = $request->input('cols');
 
             $room->save();
+
+
+            //We create all default seats for that room
+            for ($i=1; $i <= $request->input('rows'); $i++) { 
+                for ($j=1; $j <= $request->input('cols'); $j++) { 
+                    $seat = new SeatModel();
+                    $seat->row = $i;
+                    $seat->col = $j;
+                    $seat->type = 'seat';
+                    $seat->room_id = $room->id;
+                    $seat->save();
+
+                }
+            }
+
+            DB::commit();
+
 
             return response()->json(
                 [
@@ -101,6 +128,8 @@ class Room extends Controller
                 200
             );
         } catch (Exception $exception) {
+
+            DB::rollBack();
 
             return response()->json(
                 "An unexpected error ocurred",
