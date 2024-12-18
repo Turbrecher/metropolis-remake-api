@@ -105,15 +105,14 @@ class Room extends Controller
 
 
             //We create all default seats for that room
-            for ($i=1; $i <= $request->input('rows'); $i++) { 
-                for ($j=1; $j <= $request->input('cols'); $j++) { 
+            for ($i = 1; $i <= $request->input('rows'); $i++) {
+                for ($j = 1; $j <= $request->input('cols'); $j++) {
                     $seat = new SeatModel();
                     $seat->row = $i;
                     $seat->col = $j;
                     $seat->type = 'seat';
                     $seat->room_id = $room->id;
                     $seat->save();
-
                 }
             }
 
@@ -146,12 +145,18 @@ class Room extends Controller
     public function edit(Request $request, string $id)
     {
 
-        if (!is_numeric($id)) {
-            throw new TypeError();
-        }
+
 
 
         try {
+
+
+
+            if (!is_numeric($id)) {
+                throw new TypeError();
+            }
+
+
             $validated = $request->validate([
                 "name" => ["required"],
                 "rows" => ["required"],
@@ -159,12 +164,33 @@ class Room extends Controller
 
             ]);
 
+            //We begin a transaction
+            DB::beginTransaction();
+
             $room = RoomModel::find($id);
             $room->name = $request->input('name');
             $room->rows = $request->input('rows');
             $room->cols = $request->input('cols');
 
-            $room->save();
+            //$room->save();
+
+
+            //We load all seats.
+            $allSeats = json_decode($request->input('allSeats'));
+
+
+            //We save all seat changes into the db.
+            foreach ($allSeats as $seat) {
+                $dbSeat = SeatModel::find($seat->id);
+
+                $dbSeat->type = $seat->type;
+                $dbSeat->save();
+            }
+
+
+
+            //We  commit all changes.
+            DB::commit();
 
             return response()->json(
                 [
@@ -174,6 +200,7 @@ class Room extends Controller
                 200
             );
         } catch (TypeError $typeError) {
+
             return response()->json(
                 "You have to filter by id, which has to be a number",
                 400
@@ -185,6 +212,8 @@ class Room extends Controller
                 422
             );
         } catch (Exception $exception) {
+
+            DB::rollBack();
 
             return response()->json(
                 $exception,
@@ -230,7 +259,4 @@ class Room extends Controller
             );
         }
     }
-
-
-
 }
