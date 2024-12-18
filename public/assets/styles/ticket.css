@@ -1,0 +1,56 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    background: #051122;
+    color: white;
+}
+
+header{
+    background: #0a1c3a;
+    padding:2rem;
+}
+
+header .img{
+    width: 100%;
+}
+
+header img{
+    width: 100%;
+}
+
+
+.ticket{
+    display: grid;
+    grid-template-columns: 40% 60%;
+    padding: 2rem;
+    gap: 2rem;
+}
+
+.ticket .photo{
+    width: 100%;
+}
+
+.ticket .photo img{
+    width: 100%;
+}
+
+.ticket .info *{
+    margin-bottom: 2rem;
+}
+
+.ticket .info .title{
+    font-size: 3rem
+}
+
+.ticket .info .datetime, .ticket .info .seat{
+    font-size: 2rem
+}
+
+.qr{
+    display: flex;
+    padding: 2rem;
+    justify-content: left;
+}
