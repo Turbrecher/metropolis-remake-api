@@ -92,10 +92,12 @@ class Ticket extends Controller
 
 
         try {
+            //return response()->json($request->user()->id);
+
             $validated = $request->validate([
                 "movie_session_id" => ["required"],
                 "seat_id" => ["required"],
-                "user_id" => ["required"],
+                "user_id" => [""],
                 "date" => ["required"],
 
             ]);
@@ -103,7 +105,15 @@ class Ticket extends Controller
             $ticket = new TicketModel();
             $ticket->movie_session_id = $request->input('movie_session_id');
             $ticket->seat_id = $request->input('seat_id');
-            $ticket->user_id = $request->input('user_id');
+
+            if ($request->user()->hasRole('admin') && $request->input('user_id')) {
+                $ticket->user_id = $request->input('user_id');
+            } else {
+                $ticket->user_id = $request->user()->id;
+            }
+
+
+
             $ticket->date = $request->input('date');
 
 
@@ -218,6 +228,4 @@ class Ticket extends Controller
             );
         }
     }
-
-
 }

@@ -56,7 +56,12 @@ class MovieSession extends Controller
 
             $movieSession = MovieSessionModel::find($id);
             $movieSession->room;
+            $movieSession->room->seats;
             $movieSession->movie;
+            $movieSession->tickets;
+            foreach ($movieSession->tickets as $ticket) {
+                $ticket->seat;
+            }
 
             return response()->json(
                 $movieSession,
